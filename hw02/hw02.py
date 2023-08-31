@@ -31,6 +31,7 @@ def product(n, term):
     162
     """
     "*** YOUR CODE HERE ***"
+    
 
 
 def accumulate(combiner, base, n, term):
