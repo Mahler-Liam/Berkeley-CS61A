@@ -191,6 +191,8 @@ def mul_church(m, n):
         return m(n(f))
     return mul_church2
 
+is_zero = lambda n: n(lambda _: False)(True)
+
 def pow_church(m, n):
     """Return the Church numeral m ** n, for Church numerals m and n.
 
