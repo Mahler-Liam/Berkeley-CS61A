@@ -31,7 +31,12 @@ def product(n, term):
     162
     """
     "*** YOUR CODE HERE ***"
-    
+    product = 1
+    for i in range(1, n+1):
+        product = term(i) * product
+
+    return product
+
 
 
 def accumulate(combiner, base, n, term):
