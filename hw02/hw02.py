@@ -176,6 +176,7 @@ def add_church(m, n):
     def add_church2(f):
         return lambda x: m(f)(n(f)(x))
     return add_church2
+
 def mul_church(m, n):
     """Return the Church numeral for m * n, for Church numerals m and n.
 
