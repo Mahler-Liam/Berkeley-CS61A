@@ -12,6 +12,14 @@ def pascal(row, column):
     3
     """
     "*** YOUR CODE HERE ***"
+    if column == 0:
+        return 1
+    if column == row:
+        return 1
+    if column > row:
+        return 0
+    
+    return pascal(row-1, column) + pascal(row-1, column-1)
 
 
 def compose1(f, g):
@@ -40,6 +48,12 @@ def repeated(f, n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n == 0:
+        return lambda x: x
+    elif n == 1:
+        return f
+    else:
+        return compose1(f, repeated(f, n-1))
 
 
 def num_eights(x):
@@ -64,6 +78,15 @@ def num_eights(x):
     True
     """
     "*** YOUR CODE HERE ***"
+    if x > 0 and x < 10:
+        if x == 8:
+            return 1
+        return 0
+    else:
+        if x % 10 == 8:
+            return 1 + num_eights(x // 10)
+        else:
+            return num_eights(x // 10)
 
 
 def pingpong(n):
@@ -99,4 +122,21 @@ def pingpong(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    # direction = 1
+    # for i in range(1, n):
+    #     if num_eights(i) > 0 or (i % 8 == 0):
+    #         direction = -direction
+    def helper(i, n, direction):
+        if i == n:
+            return direction
+        else:
+            if num_eights(i) > 0 or (i % 8 == 0):
+                return helper(i+1, n, -direction)       
+            return helper(i+1, n, direction)
+            
+
+    if n <= 8:
+        return n
+    else:
+        return helper(1, n, 1)+ pingpong(n-1)
 
