@@ -21,6 +21,9 @@ def composer(func=lambda x: x):
     """
     def func_adder(g):
         "*** YOUR CODE HERE ***"
+        h = lambda x: func(g(x))
+        return composer(h)
+
     return func, func_adder
 
 
@@ -43,6 +46,9 @@ def g(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n <= 3:
+        return n
+    return g(n-1) + 2 * g(n-2) + 3 * g(n-3)
 
 def g_iter(n):
     """Return the value of G(n), computed iteratively.
@@ -63,6 +69,14 @@ def g_iter(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n <= 3:
+        current = n
+    a, b, c = 1, 2, 3
+    while n > 3:
+        current = c + 2 * b + 3 * a
+        a, b, c = b, c, current
+        n -= 1
+    return current
 
 
 def missing_digits(n):
@@ -93,6 +107,11 @@ def missing_digits(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n >= 1 and n <= 9:
+        return 0
+    if (n // 10) % 10 == (n % 10):
+        return missing_digits(n // 10) 
+    return missing_digits(n // 10) + n % 10 - (n // 10) % 10 - 1
 
 
 def count_change(total):
@@ -112,6 +131,13 @@ def count_change(total):
     True
     """
     "*** YOUR CODE HERE ***"
+    def helper(total, min):
+        if total == 0:
+            return 1
+        elif total < (1 << min):
+            return 0
+        return helper(total, min + 1) + helper(total - (1 << min), min)
+    return helper(total, 0)
 
 
 def print_move(origin, destination):
@@ -147,6 +173,14 @@ def move_stack(n, start, end):
     """
     assert 1 <= start <= 3 and 1 <= end <= 3 and start != end, "Bad start/end"
     "*** YOUR CODE HERE ***"
+    if n == 1:
+        print_move(start, end)
+        return
+    else:
+        middle = 6 - start - end
+        move_stack(n - 1, start, middle)
+        print_move(start, end)
+        move_stack(n - 1, middle, end)
 
 
 from operator import sub, mul
@@ -161,5 +195,6 @@ def make_anonymous_factorial():
     >>> check(HW_SOURCE_FILE, 'make_anonymous_factorial', ['Assign', 'AugAssign', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
+    from functools import reduce
+    return lambda n: reduce(mul, range(1, n + 1))
 
