@@ -20,6 +20,19 @@ def make_bank(balance):
     """
     def bank(message, amount):
         "*** YOUR CODE HERE ***"
+        nonlocal balance
+        if message == "withdraw":
+            if balance - amount > 0:
+                balance -= amount
+                return balance
+            else:
+                return "Insufficient funds"
+        elif message == "deposit":
+            balance += amount
+            return balance
+        else:
+            return "Invalid message"
+        
     return bank
 
 
@@ -52,6 +65,23 @@ def make_withdraw(balance, password):
     True
     """
     "*** YOUR CODE HERE ***"
+    try_list = []
+    def password_withdraw(amount, passw):
+        nonlocal balance, password, try_list
+        if passw == password and len(try_list) < 3:
+            if balance - amount > 0:
+                balance -= amount
+                return balance
+            else:
+                return "Insufficient funds"
+        else:
+            
+            if len(try_list) < 3:
+                try_list.append(passw)
+                return "Incorrect password"
+            else:
+                return f"Too many incorrect attempts. Attempts: {try_list}"
+    return password_withdraw
 
 
 def repeated(t, k):
@@ -76,6 +106,18 @@ def repeated(t, k):
     """
     assert k > 1
     "*** YOUR CODE HERE ***"
+    prev = next(t)
+    times = 1
+    for i in t:
+        if i == prev:
+            times += 1
+            if times == k:
+                return i
+        else:
+            times = 1
+            prev = i
+
+
 
 
 def merge(incr_a, incr_b):
@@ -98,6 +140,24 @@ def merge(incr_a, incr_b):
     iter_a, iter_b = iter(incr_a), iter(incr_b)
     next_a, next_b = next(iter_a, None), next(iter_b, None)
     "*** YOUR CODE HERE ***"
+    while next_a is not None or next_b is not None:
+        if next_a == None:
+            yield next_b
+            next_b = next(iter_b, None)
+        elif next_b == None:
+            yield next_a
+            next_a = next(iter_a, None)
+        else:
+            if next_a > next_b:
+                yield next_b
+                next_b = next(iter_b, None)
+            elif next_a == next_b:
+                yield next_b
+                next_a, next_b = next(iter_a, None), next(iter_b, None)
+            else:
+                yield next_a
+                next_a = next(iter_a, None)
+    
 
 
 def make_joint(withdraw, old_pass, new_pass):
@@ -139,6 +199,14 @@ def make_joint(withdraw, old_pass, new_pass):
     "Too many incorrect attempts. Attempts: ['my', 'secret', 'password']"
     """
     "*** YOUR CODE HERE ***"
+    check = withdraw(0, old_pass)
+    if type(check) == str:
+        return check
+    def protected_withdraw(amount, passw):
+        nonlocal old_pass, new_pass
+        return withdraw(amount, old_pass if passw == new_pass else passw)
+    return protected_withdraw
+
 
 
 def remainders_generator(m):
@@ -173,6 +241,13 @@ def remainders_generator(m):
     11
     """
     "*** YOUR CODE HERE ***"
+    def remainder(n):
+        while True:
+            for natural in naturals():
+                yield natural * m + n
+    yield remainder(0)
+    for i in range(-m+1, 0):
+        yield remainder(i)
 
 
 def naturals():
