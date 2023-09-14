@@ -50,7 +50,7 @@ def label_squarer(t):
     "*** YOUR CODE HERE ***"
     return t.map(lambda x: x * x)
 
-
+# ★★★
 def cumulative_mul(t):
     """Mutates t so that each node's label becomes the product of all labels in
     the corresponding subtree rooted at t.
@@ -72,7 +72,7 @@ def cumulative_mul(t):
     
     t.label = mul_label
 
-
+# ★★★
 def has_cycle(link):
     """Return whether link contains a cycle.
 
@@ -99,7 +99,7 @@ def has_cycle(link):
     return False
 
 
-
+# ★★★★★
 def has_cycle_constant(link):
     """Return whether link contains a cycle.
 
@@ -121,7 +121,7 @@ def has_cycle_constant(link):
         
     return False
 
-
+# ★★★★
 def reverse_other(t):
     """Mutates the tree such that nodes on every other (odd-depth) level
     have the labels of their branches all reversed.
