@@ -79,7 +79,7 @@
   )
 )
 
-
+;★★★
 (define (substitute s old new)
   'YOUR-CODE-HERE
   (if (null? s)
@@ -94,7 +94,7 @@
   )
 )
 
-
+;★★★
 (define (sub-all s olds news)
   'YOUR-CODE-HERE
   (if (null? s)
