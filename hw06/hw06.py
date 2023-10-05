@@ -11,7 +11,7 @@ def survey(p):
     import hashlib
     return hashlib.sha224(p.encode('utf-8')).hexdigest()
 
-
+# ★
 class VendingMachine:
     """A vending machine that vends some product for some price.
 
@@ -50,7 +50,39 @@ class VendingMachine:
     'Here is your soda.'
     """
     "*** YOUR CODE HERE ***"
-
+    funds, stock = 0, 0
+    def __init__(self, category, price):
+        self.category = category
+        self.price = price
+        
+    def vend(self):
+        if self.stock == 0:
+            return 'Inventory empty. Restocking required.'
+        else:
+            if self.funds < self.price:
+                needed = self.price - self.funds
+                return f'You must add ${needed} more funds.'
+            elif self.funds == self.price:
+                self.funds = 0
+                self.stock -= 1
+                return f'Here is your {self.category}.'
+            else:
+                change = self.funds - self.price
+                self.funds = 0
+                self.stock -= 1
+                return f'Here is your {self.category} and ${change} change.'
+    
+    def add_funds(self, money):
+        if self.stock == 0:
+            return f'Inventory empty. Restocking required. Here is your ${money}.'
+        else:
+            self.funds += money
+            return f'Current balance: ${self.funds}'
+    
+    def restock(self, amount):
+        self.stock += amount
+        return f'Current {self.category} stock: {self.stock}'
+            
 
 class Mint:
     """A mint creates coins by stamping on years.
@@ -88,9 +120,11 @@ class Mint:
 
     def create(self, kind):
         "*** YOUR CODE HERE ***"
+        return kind(self.year)
 
     def update(self):
         "*** YOUR CODE HERE ***"
+        self.year = Mint.current_year
 
 class Coin:
     def __init__(self, year):
@@ -98,6 +132,9 @@ class Coin:
 
     def worth(self):
         "*** YOUR CODE HERE ***"
+        time = Mint.current_year - self.year
+        return self.cents + (0 if time < 50 else time - 50)
+
 
 class Nickel(Coin):
     cents = 5
@@ -106,6 +143,7 @@ class Dime(Coin):
     cents = 10
 
 
+# ★★★
 def is_bst(t):
     """Returns True if the Tree t has the structure of a valid BST.
 
@@ -132,8 +170,43 @@ def is_bst(t):
     False
     """
     "*** YOUR CODE HERE ***"
+    def bst_min(t):
+        if t.is_leaf():
+            return t.label
+        elif len(t.branches) == 1:
+            if t.label > t.branches[0].label:
+                return bst_min(t.branches[0])
+            else:
+                return t.label
+        else:
+            return bst_min(t.branches[0])
+    
+    def bst_max(t):
+        if t.is_leaf():
+            return t.label
+        elif len(t.branches) == 1:
+            if t.label < t.branches[0].label:
+                return bst_max(t.branches[0])
+            else:
+                return t.label
+        else:
+            return bst_max(t.branches[1])
 
+    if t.is_leaf():
+        return True
+    if len(t.branches) == 1:
+        if t.label > t.branches[0].label:
+            return is_bst(t.branches[0]) and t.label >= bst_max(t.branches[0])
+        else:
+            return is_bst(t.branches[0]) and t.label <= bst_min(t.branches[0])
+    elif len(t.branches) == 2:
+        left, right = t.branches
+        return is_bst(left) and (t.label >= bst_max(left)) \
+               and is_bst(right) and (t.label <= bst_min(right))
+    else:
+        return False
 
+# ★★
 def store_digits(n):
     """Stores the digits of a positive number n in a linked list.
 
@@ -150,8 +223,16 @@ def store_digits(n):
     >>> print("Do not use str or reversed!") if any([r in cleaned for r in ["str", "reversed"]]) else None
     """
     "*** YOUR CODE HERE ***"
+    n_link = Link(n % 10)
+    n = n // 10
+    while n != 0:
+        new_link = Link(n % 10)
+        new_link.rest = n_link
+        n_link = new_link
+        n = n // 10
+    return n_link
 
-
+# ★★★★
 def path_yielder(t, value):
     """Yields all possible paths from the root of t to a node with the label value
     as a list.
@@ -188,9 +269,11 @@ def path_yielder(t, value):
     """
 
     "*** YOUR CODE HERE ***"
-
-    for _______________ in _________________:
-        for _______________ in _________________:
+    if t.label == value:
+        yield [t.label]
+    for b in t.branches:
+        for path in path_yielder(b, value):
+            yield [t.label] + path
 
             "*** YOUR CODE HERE ***"
 
@@ -213,6 +296,14 @@ def remove_all(link , value):
     <0 1>
     """
     "*** YOUR CODE HERE ***"
+    if link.rest == Link.empty:
+        return
+    if link.rest.first == value:
+        link.rest = link.rest.rest
+        remove_all(link, value)
+    else:
+        remove_all(link.rest, value)
+
 
 
 def deep_map(f, link):
@@ -229,6 +320,13 @@ def deep_map(f, link):
     <<2 <4 6> 8> <<10>>>
     """
     "*** YOUR CODE HERE ***"
+    if link == Link.empty:
+        return Link.empty
+    if isinstance(link.first, Link):
+        first = deep_map(f, link.first)
+    else:
+        first = f(link.first)
+    return Link(first, deep_map(f, link.rest))
 
 
 class Tree:
